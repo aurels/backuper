@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
   s.date        = "2009-03-22"
   s.summary     = "Simple unix server backup tool"
   s.email       = "aurelien.malisart@gmail.com"
-  s.homepage    = "http://aurelien.malisart.be"
+  s.homepage    = "http://github.com/aurels/backuper"
   s.description = "Simple unix server backup tool"
   s.has_rdoc    = false
   s.authors     = ["Aurélien Malisart"]
