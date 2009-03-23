@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = "backuper"
-  s.version     = "0.1"
+  s.version     = "0.2"
   s.date        = "2009-03-22"
   s.summary     = "Simple unix server backup tool"
   s.email       = "aurelien.malisart@gmail.com"

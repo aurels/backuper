@@ -5,7 +5,10 @@ To install:
 sudo gem list -a http://gems.github.com
 sudo gem install aurels-backuper
 
-Create a script file which requires 'backuper' and uses it
-(example in examples/backup.rb). Make cron run this script when you want (as
-the root user)
+To use:
+
+- Create a script file which requires 'backuper' and create a new Backuper instance
+- Configure cron to run the script as root when you want
+
+Example of backup script in examples/backup.rb (use it as a base template)
 
