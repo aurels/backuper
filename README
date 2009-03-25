@@ -2,7 +2,7 @@ A simple server backup tool written in Ruby.
 
 To install:
 
-sudo gem list -a http://gems.github.com
+sudo gem source -a http://gems.github.com
 sudo gem install aurels-backuper
 
 To use:
