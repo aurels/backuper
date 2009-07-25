@@ -109,7 +109,7 @@ class Backuper
     run "rm -f /tmp/#{@archive_filename}"
   end
   
-  def say(str)
+  def self.say(str)
     puts "#{str}"
   end
   
