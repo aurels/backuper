@@ -18,11 +18,9 @@ UNIX commands:
 - Create a script file which requires 'backuper' and create a new Backuper instance
 - Configure cron to run the script as root when you want
 
-An example of backup script in examples/backup.rb (use it as a base template).
+An example of backup script is in examples/backup.rb (use it as a base template).
 
-(c) 2009 Aurélien Malisart
-aurelien.malisart@gmail.com
-http://aurelien.malisart.be
+(c) 2009 Aurélien Malisart, aurelien.malisart@gmail.com, http://aurelien.malisart.be
 
 Released under GNU GPLv3 license.
 
