@@ -18,6 +18,15 @@ class Backuper
     @archive_filename = "backup-#{Time.now.strftime('%Y-%m-%d')}-#{Time.now.to_i}.tar.gz"
   end
   
+  def self.perform_profile(profile)
+    unless File.exist?(File.join('.', 'config', 'profiles', "#{profile}.rb"))
+      say "#{profile} backup profile does not exist"
+    else
+      require "config/profiles/#{profile}"
+      say "backup profile #{profile} performed"
+    end
+  end
+  
   def config_file(path)
     @config_files << path
   end
