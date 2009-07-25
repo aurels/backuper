@@ -5,7 +5,7 @@ backup = Backuper.new
 backup.config_file "/etc/ssh/sshd_config"
 backup.config_file "/etc/passwd"
 backup.config_file "/etc/group"
-backup.config_file "/etc/contab"
+backup.config_file "/etc/crontab"
 
 # Apache2 ======================================================================
 

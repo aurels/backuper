@@ -1,7 +1,12 @@
+set :path, '/Users/aurels/Coding/ruby/backuper'
+
+require 'lib/backuper'
+require 'lib/helpers'
+
 # Schedule here your backup profiles 
 
 every 12.hours do
-  runner "Backuper.perform_profile('')"
+  backup_profile 'default'
 end
 
 # Learn more on the whenever syntax on http://github.com/javan/whenever
