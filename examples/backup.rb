@@ -7,47 +7,64 @@ require 'backuper'
 
 backup = Backuper.new
 
-# Unix general #################################################################
+# Unix general =================================================================
 
 backup.config_file "/etc/ssh/sshd_config"
 backup.config_file "/etc/passwd"
 backup.config_file "/etc/group"
 backup.config_file "/etc/contab"
 
-# Apache2 ######################################################################
+# Apache2 ======================================================================
 
 backup.config_file "/etc/apache2/httpd.conf"
 backup.config_dir  "/etc/apache2/sites-available"
 
-# SQLite databases #############################################################
+# Nginx ========================================================================
 
-backup.sqlite_database "/path/to/my/database1.sqlite3"
-backup.sqlite_database "/path/to/my/database2.sqlite3"
+backup.config_file "/opt/nginx/conf/nginx.conf"
+backup.config_dir  "/opt/nginx/conf/sites-available"
 
-# MySQL databases ##############################################################
+# SQLite databases =============================================================
 
-# use creadentials which have at least all read access
+backup.sqlite_database "/home/aurels/databases/espassvie.sqlite3"
+                                                                
+# MySQL databases ==============================================================
+
 backup.mysql_params = {
-  :user    => 'your my sql user',
-  :pasword => 'yout sql pass'
+  :user    => 'backup',
+  :password => 'blup'
 }
+
+# We recommend creating a 'backup' user with only SELECT and LOCK TABLES
+# privileges :
+#
+# mysql -u root -p
+# GRANT SELECT, LOCK TABLES ON *.* TO backup@localhost IDENTIFIED BY 'blup';
+# FLUSH PRIVILEGES;
 
 backup.mysql_database 'db1'
 backup.mysql_database 'db2'
 
-# Data directories #############################################################
+# Data directories =============================================================
 
-backup.data_dir "/a/folder/important/to/me"
-backup.data_dir "/another/folder/important/to/me"
+backup.data_dir "/super/projet/rails/public/assets"
 
-# FTP setup ####################################################################
+# FTP or SSH setup =============================================================
 
 backup.ftp_params = {
-  :host     => 'ftp host',
-  :user     => 'ftp username',
-  :password => 'ftp password',
-  :path     => '/backups'
+  :host     => '',
+  :user     => '',
+  :password => '',
+  :path     => '/backups' # path on host
 }
+
+# or:
+
+#backup.ssh_params = {
+#  :host => '',
+#  :user => '', # this user needs to have his public key authorized on the host
+#  :path => '/home/aurels/backups' # path on host
+#}
 
 ################################################################################
 

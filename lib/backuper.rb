@@ -1,9 +1,10 @@
 class Backuper
   
-  TMP_DIR = "/backuper"
+  TMP_DIR = "/tmp/backuper"
   
   attr_writer :mysql_params
   attr_writer :ftp_params
+  attr_writer :ssh_params
   
   def initialize
     @config_files     = []
@@ -13,6 +14,7 @@ class Backuper
     @mysql_databases  = []
     @data_dirs        = []
     @ftp_params       = {}
+    @ssh_params       = {}
     @archive_filename = "backup-#{Time.now.strftime('%Y-%m-%d')}-#{Time.now.to_i}.tar.gz"
   end
   
@@ -76,8 +78,6 @@ class Backuper
       @mysql_databases.each do |db|
         run "mysqldump #{db} --user=#{@mysql_params[:user]} --password=#{@mysql_params[:password]} > #{File.join(TMP_DIR, 'databases', 'mysql', "#{db}.sql")}"
       end
-    else
-      say "MySQL databases backup not done because MySQL params are unset"
     end
   end
   
@@ -88,8 +88,10 @@ class Backuper
   def upload_archive
     unless @ftp_params.empty?
       run "ncftpput -u #{@ftp_params[:user]} -p #{@ftp_params[:password]} #{@ftp_params[:host]} #{@ftp_params[:path]} /tmp/#{@archive_filename}"
-    else
-      say "Upload to FTP server not done because FTP params are unset"
+    end
+    
+    unless @ssh_params.empty?
+      run "scp /tmp/#{@archive_filename} #{@ssh_params[:user]}@#{@ssh_params[:host]}:#{@ssh_params[:path]}"
     end
   end
   
