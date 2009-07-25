@@ -1,0 +1,28 @@
+A simple server backup tool written in Ruby.
+
+= To install:
+
+  sudo gem source -a http://gems.github.com
+  sudo gem install aurels-backuper
+
+= Dependencies:
+
+UNIX commands:
+- 'tar'
+- 'mysqldump' if you want to backup your MySQL databases
+- 'ncftpput' if you backup through FTP
+- 'scp' if you backup through SSH
+
+= To use:
+
+- Create a script file which requires 'backuper' and create a new Backuper instance
+- Configure cron to run the script as root when you want
+
+An example of backup script in examples/backup.rb (use it as a base template).
+
+(c) 2009 Aurélien Malisart
+aurelien.malisart@gmail.com
+http://aurelien.malisart.be
+
+Released under GNU GPLv3 license.
+
