@@ -18,11 +18,13 @@ http://www.gnu.org/copyleft/gpl.html
 
 = Configuration
 
-Copy examples config files as starting templates. First a backup profile:
+Copy example config files as starting templates. First a backup profile:
 
   cp config/profiles/profile.rb.example config/profiles/my_profile.rb
 
-Edit it to your needs. Then, copy the scheduling config template:
+Edit it to your needs.
+
+Then, copy the scheduling config template:
 
   cp config/schedule.rb.example config/schedule.rb
 
