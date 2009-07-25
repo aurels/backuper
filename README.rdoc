@@ -1,13 +1,14 @@
 = About
 
 Backuper is a simple server backup tool written in Ruby. It handles multiple
-backup profiles, auto cron updating and upload to remote server through FTP and
+backup profiles, auto cron updating and upload to remote servers through FTP and
 SSH.
 
 (c) 2009 Aurélien Malisart, aurelien.malisart@gmail.com,
 http://aurelien.malisart.be
 
-This is open source software released under GNU GPLv3 license.
+This is open source software released under GNU GPLv3 license. 
+http://www.gnu.org/copyleft/gpl.html
 
 = To install:
 
@@ -21,15 +22,19 @@ Copy examples config files as starting templates. First a backup profile:
 
   cp config/profiles/profile.rb.example config/profiles/my_profile.rb
 
-Edit it to your needs. Then, a scheduling config template:
+Edit it to your needs. Then, copy the scheduling config template:
 
   cp config/schedule.rb.example config/schedule.rb
 
-Edit it to your needs.
+Edit it to your needs. Example:
+
+  every 12.hours do
+    backup_profile 'my_profile'
+  end
 
 = Dependencies:
 
-ruby gems:
+Ruby gems:
 - rake
 - javan-whenever (github)
 
@@ -38,4 +43,3 @@ UNIX commands:
 - 'mysqldump' if you want to backup your MySQL databases
 - 'ncftpput' if you backup through FTP
 - 'scp' if you backup through SSH
-
