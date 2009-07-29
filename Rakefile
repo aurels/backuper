@@ -1,12 +1,17 @@
 require 'rake'
 require 'lib/backuper'
 
+desc "Executes a backup profile"
+task :backup do
+  Backuper.perform_profile(ARGS[1].split('=')[1])
+end
+
 desc "Show the crontab"
-task :update_crontab do
-  run "whenever"
+task :crontab do
+  puts `whenever`
 end
 
 desc "Updates the crontab"
 task :update_crontab do
-  run "whenever --update-crontab backuper"
+  puts `whenever --update-crontab backuper`
 end

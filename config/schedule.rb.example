@@ -1,12 +1,11 @@
-set :path, '/Users/aurels/Coding/ruby/backuper'
+# Path to the Backuper git clone ===============================================
 
-require 'lib/backuper'
-require 'lib/helpers'
+set :path, File.expand_path(__FILE__).split('(')[0]
 
-# Schedule here your backup profiles 
+# Schedule here your backup profiles ===========================================
 
 every 12.hours do
-  backup_profile 'default'
+  rake "backup PROFILE=default"
 end
 
 # Learn more on the whenever syntax on http://github.com/javan/whenever
