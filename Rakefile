@@ -3,7 +3,7 @@ require 'lib/backuper'
 
 desc "Executes a backup profile"
 task :backup do
-  Backuper.perform_profile(ARGS[1].split('=')[1])
+  Backuper.perform_profile(ARGV[1].split('=')[1])
 end
 
 desc "Show the crontab"
