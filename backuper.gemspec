@@ -19,6 +19,8 @@ Gem::Specification.new do |s|
     ".gitignore",
      "README.rdoc",
      "Rakefile",
+     "VERSION",
+     "backuper.gemspec",
      "config/profiles/profile.rb.example",
      "config/schedule.rb.example",
      "lib/backuper.rb"
