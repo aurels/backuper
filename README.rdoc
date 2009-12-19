@@ -4,13 +4,7 @@ Backuper is a simple server backup tool written in Ruby. It handles multiple
 backup profiles, auto cron updating and upload to remote servers through FTP and
 SSH.
 
-(c) 2009 Aurélien Malisart, aurelien.malisart@gmail.com,
-http://aurelien.malisart.be
-
-This is open source software released under GNU GPLv3 license. 
-http://www.gnu.org/copyleft/gpl.html
-
-= To install:
+= Installation
 
   sudo gem install javan-whenever
   git clone git://github.com/aurels/backuper.git /a/cool/location
@@ -34,6 +28,20 @@ Edit it to your needs. Example:
     backup_profile 'my_profile'
   end
 
+= Usage
+
+To manually run a backup profile:
+
+  rake backup PROFILE=my_profile
+
+To update the crontab according to your schedule.rb :
+
+  rake update_crontab
+
+If you only want to show the crontab lines :
+
+  rake crontab 
+
 = Dependencies:
 
 Ruby gems:
@@ -45,3 +53,11 @@ UNIX commands:
 - 'mysqldump' if you want to backup your MySQL databases
 - 'ncftpput' if you backup through FTP
 - 'scp' if you backup through SSH
+
+= Credits
+
+(c) 2009 Aurélien Malisart
+http://aurelien.malisart.be
+
+This is open source software released under GNU GPLv3 license. 
+http://www.gnu.org/copyleft/gpl.html
