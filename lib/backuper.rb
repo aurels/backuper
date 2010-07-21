@@ -50,6 +50,7 @@ class Backuper
   def perform!
     self.prepare
     self.backup_config_files_and_dirs
+    self.backup_data_dirs
     self.backup_sqlite_databases
     self.backup_mysql_databases
     self.create_archive
@@ -75,7 +76,13 @@ class Backuper
       run "cp -R #{config_dir} #{File.join(TMP_DIR, 'config_files')}"
     end
   end
-  
+
+  def backup_data_dirs
+    @data_dirs.each do |data_dir|
+      run "cp -R #{data_dir} #{File.join(TMP_DIR, 'data_dir')}"
+    end
+  end
+      
   def backup_sqlite_databases
     @sqlite_databases.each do |db|
       run "cp #{db} #{File.join(TMP_DIR, 'databases', 'sqlite')}"
