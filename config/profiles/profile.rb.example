@@ -61,7 +61,7 @@ backup.ftp_params = {
 
 # Mail setup ===================================================================
 
-backup.ftp_params = {
+backup.email_params = {
   :to  => 'me@gmail.com',
   :via => :sendmail
 }
