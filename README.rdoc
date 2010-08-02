@@ -1,8 +1,8 @@
 = About
 
 Backuper is a simple server backup tool written in Ruby. It handles multiple
-backup profiles, auto cron updating and upload to remote servers through FTP and
-SSH.
+backup profiles, auto cron updating and upload to remote servers through FTP/SSH
+or archive sending to an email address.
 
 = Installation
 
