@@ -103,7 +103,7 @@ class Backuper
   
   def create_archive
     run "tar czf /tmp/#{@archive_filename} #{TMP_DIR}"
-    run "ls -l /tmp/#{@archive_filename}"
+    run "du -h /tmp/#{@archive_filename}"
   end
   
   def upload_archive
