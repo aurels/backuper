@@ -115,7 +115,9 @@ class Backuper
     end
     
     unless @email_params.empty?
-      Pony.mail(@email_params.merge(:attachments => {'rendecom.zip' => File.open("/tmp/#{@archive_filename}")}))
+      if Pony.mail(@email_params.merge(:attachments => {'rendecom.zip' => File.open("/tmp/#{@archive_filename}")}))
+        puts "Mail delivered to #{@email_params[:to]}"
+      end
     end
   end
   

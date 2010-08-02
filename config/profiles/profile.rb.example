@@ -62,8 +62,9 @@ backup.ftp_params = {
 # Mail setup ===================================================================
 
 backup.email_params = {
-  :to  => 'me@gmail.com',
-  :via => :sendmail
+  :to          => 'me@gmail.com',
+  :via         => :smtp,
+  :via_options => { :enable_starttls_auto =>  }
 }
 
 ################################################################################
