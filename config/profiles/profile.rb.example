@@ -59,6 +59,13 @@ backup.ftp_params = {
 #  :path => '/home/aurels/backups' # path on host
 #}
 
+# Mail setup ===================================================================
+
+backup.ftp_params = {
+  :to  => 'me@gmail.com',
+  :via => :sendmail
+}
+
 ################################################################################
 
 backup.perform!

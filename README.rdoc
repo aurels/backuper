@@ -46,7 +46,8 @@ If you only want to show the crontab lines :
 
 Ruby gems:
 - rake
-- javan-whenever (github)
+- whenever
+- pony
 
 UNIX commands:
 - 'tar'

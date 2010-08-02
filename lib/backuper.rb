@@ -1,3 +1,5 @@
+require 'pony'
+
 class Backuper
   
   TMP_DIR = "/tmp/backuper"
@@ -5,6 +7,7 @@ class Backuper
   attr_writer :mysql_params
   attr_writer :ftp_params
   attr_writer :ssh_params
+  attr_writer :email_params
   
   def initialize
     @config_files     = []
@@ -108,6 +111,10 @@ class Backuper
     
     unless @ssh_params.empty?
       run "scp /tmp/#{@archive_filename} #{@ssh_params[:user]}@#{@ssh_params[:host]}:#{@ssh_params[:path]}"
+    end
+    
+    unless @email_params.empty?
+      Pony.mail(@email_params.merge(:attachments => {'rendecom.zip' => File.open('/tmp/#{@archive_filename}')}))
     end
   end
   
