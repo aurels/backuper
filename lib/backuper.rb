@@ -51,7 +51,7 @@ class Backuper
       return
     end
     
-    timestamp = "#{Time.now.strftime('%Y-%-m-%d-%s')}"
+    timestamp = "#{Time.now.strftime('%Y-%m-%d-%s')}"
     local_current_backup_path = "#{local_backup_base_path}/mysql/#{timestamp}.sql"
     local_latest_backup_path = Dir["#{local_backup_base_path}/mysql/*.sql"].last
     
