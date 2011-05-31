@@ -1,6 +1,6 @@
 = About
 
-Backuper is a simple server backup tool written in Ruby. It is aimed to backup a Rails application (file assets and database) to a remote SSH verser (using rsync).
+Backuper is a simple server backup tool written in Ruby. It is aimed to backup a Rails application (file assets and database) to a remote SSH server (using rsync).
 
 = Installation
 
@@ -31,9 +31,7 @@ Or use whenever :
   require 'backuper'
 
   every 12.hours do
-    Backuper.new do
-      ...
-    end
+    command "script"
   end
 
 = Credits

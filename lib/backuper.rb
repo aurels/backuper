@@ -46,7 +46,10 @@ class Backuper
   end
   
   def perform_database_backup
-    return if mysql_params['database'] == ''
+    
+    puts mysql_params
+    
+    return if mysql_params['database'] == '' || !(mysql_params['adapter'] =~ /mysql/)
     
     timestamp = "#{Time.now.strftime('%Y-%-m-%d-%s')}"
     local_current_backup_path = "#{local_backup_base_path}/mysql/#{timestamp}.sql"
