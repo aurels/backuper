@@ -17,6 +17,8 @@ Configure and run the backup :
     set :max_kept_backups,        30
     set :mysql_params,            YAML::load(File.read('config/database.yml'))['production']
   end
+
+No trailing slashes anywhere. The path in *remote_backup_ssh_info* must be the parent directory where different backups are stored (other applications).
 	
 Put this in a script (e.g., *script/backup.rb*) and make it executable (*chmod +x*).
 
