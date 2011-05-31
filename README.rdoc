@@ -15,16 +15,20 @@ Configure and run the backup :
     set :local_backup_base_path,  '/var/backups/blop'
     set :remote_backup_ssh_info,  'username@host:/path/to/backups/blop'
     set :max_kept_backups,        30
-    set :mysql_params,            YAML::load(File.read('config/database.yml'))['development']
+    set :mysql_params,            YAML::load(File.read('config/database.yml'))['production']
   end
 	
 Put this in a script (e.g., *app/backup.rb*).
+
+Don't forget to set up the public keys, it won't work with password authentication.
 
 = Scheduling
 
 Add a line to your crontab with *crontab -e* to run the script.
 
 Or use whenever :
+
+  require 'backuper'
 
   every 12.hours do
     Backuper.new do

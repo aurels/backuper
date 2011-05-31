@@ -6,8 +6,10 @@ class Backuper
   def initialize(&block)
     instance_eval(&block)
     
-    @mysql_params['host'] ||= 'localhost'
-    @mysql_params['user'] ||= 'root'
+    mysql_params['host']     ||= 'localhost'
+    mysql_params['username'] ||= 'root'
+    
+    system "mkdir -p #{local_backup_base_path}"
     
     perform_files_backup
     perform_database_backup
@@ -57,7 +59,7 @@ class Backuper
     # Local backup
     
     puts "Performing local backup of database"
-    system "mysqldump #{mysql_params['database']} --user=#{mysql_params['user']} --password=#{mysql_params['password']} > #{local_current_backup_path}"
+    system "mysqldump #{mysql_params['database']} --user=#{mysql_params['username']} --password=#{mysql_params['password']} > #{local_current_backup_path}"
     
     # Cleanup of old versions
     
