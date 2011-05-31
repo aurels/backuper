@@ -11,23 +11,25 @@ Backuper is a simple server backup tool written in Ruby. It is aimed to backup a
 Configure and run the backup :
 
   Backuper.new do
-	  set :source_path,             '/var/apps/blop/current/shared/system'
-	  set :local_backup_base_path,  '/var/backups/blop'
-	  set :remote_backup_ssh_info,  'username@host:/path/to/backups/blop'
-	  set :max_kept_backups,        30
-	  set :mysql_params,            YAML::load(File.read('config/database.yml'))['development']
-	end
+    set :source_path,             '/var/apps/blop/current/shared/system'
+    set :local_backup_base_path,  '/var/backups/blop'
+    set :remote_backup_ssh_info,  'username@host:/path/to/backups/blop'
+    set :max_kept_backups,        30
+    set :mysql_params,            YAML::load(File.read('config/database.yml'))['development']
+  end
 	
 Put this in a script (e.g., *app/backup.rb*).
 
 = Scheduling
 
-A a line to your crontab with *crontab -e* to run the script.
+Add a line to your crontab with *crontab -e* to run the script.
 
 Or use whenever :
 
   every 12.hours do
-    backup_profile 'my_profile'
+    Backuper.new do
+      ...
+    end
   end
 
 = Credits
