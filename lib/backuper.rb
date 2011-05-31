@@ -30,10 +30,10 @@ class Backuper
     
     if File.exist?("#{local_latest_backup_path}")
       puts "Performing local backup with hard links to pervious version"
-      system "rsync -az --delete --link-dest=#{local_latest_backup_path} #{source_path} #{local_current_backup_path}"
+      system "nice -n 10 rsync -az --delete --link-dest=#{local_latest_backup_path} #{source_path} #{local_current_backup_path}"
     else
       puts "Performing initial local backup"
-      system "rsync -az #{source_path} #{local_current_backup_path}"
+      system "nice -n 10 rsync -az #{source_path} #{local_current_backup_path}"
     end
     
     # Cleanup of old versions
@@ -46,7 +46,7 @@ class Backuper
   end
   
   def perform_database_backup
-    if mysql_params == {} mysql_params['database'] == '' || !(mysql_params['adapter'] =~ /mysql/)
+    if mysql_params == {} || mysql_params['database'] == '' || !(mysql_params['adapter'] =~ /mysql/)
       puts "Skipping MySQL backup as no configurtion given"
       return
     end
@@ -62,7 +62,7 @@ class Backuper
     # Local backup
     
     puts "Performing local backup of database '#{mysql_params['database']}' as user '#{mysql_params['username']}'"
-    system "mysqldump #{mysql_params['database']} --user=#{mysql_params['username']} --password=#{mysql_params['password']} > #{local_current_backup_path}"
+    system "nice -n 10 mysqldump #{mysql_params['database']} --user=#{mysql_params['username']} --password=#{mysql_params['password']} > #{local_current_backup_path}"
     
     # Cleanup of old versions
     
@@ -75,7 +75,7 @@ class Backuper
   
   def perform_remote_sync
     puts "Performing remote backup sync"
-    system "rsync -azH --delete #{local_backup_base_path} #{remote_backup_ssh_info}"
+    system "nice -n 10 rsync -azH --delete #{local_backup_base_path} #{remote_backup_ssh_info}"
     puts "Done"
   end
 end
