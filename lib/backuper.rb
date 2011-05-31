@@ -21,7 +21,7 @@ class Backuper
   end
   
   def perform_files_backup
-    timestamp = "#{Time.now.strftime('%Y-%-m-%d-%s')}"
+    timestamp = "#{Time.now.strftime('%Y-%m-%d-%s')}"
     local_current_backup_path = "#{local_backup_base_path}/files/#{timestamp}"
     local_latest_backup_path = Dir["#{local_backup_base_path}/files/*"].last
     system "mkdir -p #{local_current_backup_path}"
@@ -58,7 +58,7 @@ class Backuper
     
     # Local backup
     
-    puts "Performing local backup of database #{mysql_params['database']} as user #{mysql_params['username']}"
+    puts "Performing local backup of database '#{mysql_params['database']}' as user '#{mysql_params['username']}'"
     system "mysqldump #{mysql_params['database']} --user=#{mysql_params['username']} --password=#{mysql_params['password']} > #{local_current_backup_path}"
     
     # Cleanup of old versions
