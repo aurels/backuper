@@ -1,139 +1,76 @@
-require 'rubygems'
-require 'pony'
-
 class Backuper
+    
+  attr_accessor :source_path, :local_backup_base_path, :remote_backup_ssh_info,
+                :remote_backup_base_path, :max_kept_backups, :mysql_params
   
-  TMP_DIR = "/tmp/backuper"
-  
-  attr_writer :mysql_params
-  attr_writer :ftp_params
-  attr_writer :ssh_params
-  attr_writer :email_params
-  
-  def initialize
-    @config_files     = []
-    @config_dirs      = []
-    @sqlite_databases = []
-    @mysql_params     = {}
-    @mysql_databases  = []
-    @data_dirs        = []
-    @ftp_params       = {}
-    @ssh_params       = {}
-    @archive_filename = "backup-#{Time.now.strftime('%Y-%m-%d')}-#{Time.now.to_i}.tar.gz"
+  def initialize(&block)
+    instance_eval(&block)
+    
+    @mysql_params['host'] ||= 'localhost'
+    @mysql_params['user'] ||= 'root'
+    
+    perform_files_backup
+    perform_database_backup
+    perform_remote_sync
   end
   
-  def self.perform_profile(profile)
-    unless File.exist?(File.join('.', 'config', 'profiles', "#{profile}.rb"))
-      say "#{profile} backup profile does not exist"
+  def set(attribute, value)
+    instance_variable_set("@#{attribute}", value)
+  end
+  
+  def perform_files_backup
+    timestamp = "#{Time.now.strftime('%Y-%-m-%d-%s')}"
+    local_current_backup_path = "#{local_backup_base_path}/files/#{timestamp}"
+    local_latest_backup_path = Dir["#{local_backup_base_path}/files/*"].last
+    system "mkdir -p #{local_current_backup_path}"
+    
+    # Local backup
+    
+    if File.exist?("#{local_latest_backup_path}")
+      puts "Performing local backup with hard links to pervious version"
+      system "rsync -az --delete --link-dest=#{local_latest_backup_path} #{source_path} #{local_current_backup_path}"
     else
-      require "config/profiles/#{profile}"
-      say "backup profile #{profile} performed"
+      puts "Performing initial local backup"
+      system "rsync -az #{source_path} #{local_current_backup_path}"
     end
-  end
-  
-  def config_file(path)
-    @config_files << path
-  end
-  
-  def config_dir(path)
-    @config_dirs << path
-  end
-  
-  def sqlite_database(path)
-    @sqlite_databases << path
-  end
-  
-  def mysql_database(name)
-    @mysql_databases << name
-  end
-  
-  def data_dir(path)
-    @data_dirs << path
-  end
-  
-  def perform!
-    self.prepare
-    self.backup_config_files_and_dirs
-    self.backup_data_dirs
-    self.backup_sqlite_databases
-    self.backup_mysql_databases
-    self.create_archive
-    self.upload_archive
-    self.cleanup
-  end
-  
-  protected
-  
-  def prepare
-    run "mkdir #{TMP_DIR}"
-    run "mkdir #{File.join(TMP_DIR, 'config_files')}"
-    run "mkdir #{File.join(TMP_DIR, 'databases')}"
-    run "mkdir #{File.join(TMP_DIR, 'databases', 'sqlite')}"
-    run "mkdir #{File.join(TMP_DIR, 'databases', 'mysql')}"
-  end
-  
-  def backup_config_files_and_dirs
-    @config_files.each do |config_file|
-      run "cp #{config_file} #{File.join(TMP_DIR, 'config_files')}"
-    end
-    @config_dirs.each do |config_dir|
-      run "cp -R #{config_dir} #{File.join(TMP_DIR, 'config_files')}"
-    end
-  end
-
-  def backup_data_dirs
-    @data_dirs.each do |data_dir|
-      run "cp -R #{data_dir} #{File.join(TMP_DIR, 'data_dir')}"
-    end
-  end
-      
-  def backup_sqlite_databases
-    @sqlite_databases.each do |db|
-      run "cp #{db} #{File.join(TMP_DIR, 'databases', 'sqlite')}"
-    end
-  end
-  
-  def backup_mysql_databases
-    unless @mysql_params.empty?
-      @mysql_databases.each do |db|
-        run "mysqldump #{db} --user=#{@mysql_params[:user]} --password=#{@mysql_params[:password]} > #{File.join(TMP_DIR, 'databases', 'mysql', "#{db}.sql")}"
+    
+    # Cleanup of old versions
+    
+    Dir["#{local_backup_base_path}/files/*"].reverse.each_with_index do |backup_version, index|
+      if index >= max_kept_backups
+        system "rm -rf #{backup_version}"
       end
     end
   end
   
-  def create_archive
-    run "tar czf /tmp/#{@archive_filename} #{TMP_DIR}"
-    run "du -h /tmp/#{@archive_filename}"
-  end
-  
-  def upload_archive
-    unless @ftp_params.empty?
-      run "ncftpput -u #{@ftp_params[:user]} -p #{@ftp_params[:password]} #{@ftp_params[:host]} #{@ftp_params[:path]} /tmp/#{@archive_filename}"
+  def perform_database_backup
+    return if mysql_params['database'] == ''
+    
+    timestamp = "#{Time.now.strftime('%Y-%-m-%d-%s')}"
+    local_current_backup_path = "#{local_backup_base_path}/mysql/#{timestamp}.sql"
+    local_latest_backup_path = Dir["#{local_backup_base_path}/mysql/*.sql"].last
+    
+    unless File.exist?("#{local_backup_base_path}/mysql")
+      system "mkdir #{local_backup_base_path}/mysql"
     end
     
-    unless @ssh_params.empty?
-      run "scp /tmp/#{@archive_filename} #{@ssh_params[:user]}@#{@ssh_params[:host]}:#{@ssh_params[:path]}"
-    end
+    # Local backup
     
-    unless @email_params.empty?
-      if Pony.mail(@email_params.merge(:attachments => {"#{@archive_filename}" => File.read("/tmp/#{@archive_filename}")}))
-      #if Pony.mail(@email_params)
-        puts "Mail delivered to #{@email_params[:to]}"
+    puts "Performing local backup of database"
+    system "mysqldump #{mysql_params['database']} --user=#{mysql_params['user']} --password=#{mysql_params['password']} > #{local_current_backup_path}"
+    
+    # Cleanup of old versions
+    
+    Dir["#{local_backup_base_path}/mysql/*"].reverse.each_with_index do |backup_version, index|
+      if index >= max_kept_backups
+        system "rm -rf #{backup_version}"
       end
     end
   end
   
-  def cleanup
-    run "rm -rf #{TMP_DIR}"
-    run "rm -f /tmp/#{@archive_filename}"
-  end
-  
-  def self.say(str)
-    puts "#{str}"
-  end
-  
-  def run(cmd)
-    puts "#{cmd}"
-    system("#{cmd}")
+  def perform_remote_sync
+    puts "Performing remote backup sync"
+    system "rsync -azH --delete #{local_backup_base_path} #{remote_backup_ssh_info}"
+    puts "Done"
   end
 end

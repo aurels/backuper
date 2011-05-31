@@ -1,59 +1,34 @@
 = About
 
-Backuper is a simple server backup tool written in Ruby. It handles multiple
-backup profiles, auto cron updating and upload to remote servers through FTP/SSH
-or archive sending to an email address.
+Backuper is a simple server backup tool written in Ruby. It is aimed to backup a Rails application (file assets and database) to a remote SSH verser (using rsync).
 
 = Installation
 
-  sudo gem install javan-whenever
-  git clone git://github.com/aurels/backuper.git /a/cool/location
-  cd /a/cool/location
+  sudo gem install backuper
 
 = Configuration
 
-Copy example config files as starting templates. First a backup profile:
+Configure and run the backup :
 
-  cp config/profiles/profile.rb.example config/profiles/my_profile.rb
+  Backuper.new do
+	  set :source_path,             '/var/apps/blop/current/shared/system'
+	  set :local_backup_base_path,  '/var/backups/blop'
+	  set :remote_backup_ssh_info,  'username@host:/path/to/backups/blop'
+	  set :max_kept_backups,        30
+	  set :mysql_params,            YAML::load(File.read('config/database.yml'))['development']
+	end
+	
+Put this in a script (e.g., *app/backup.rb*).
 
-Edit it to your needs.
+= Scheduling
 
-Then, copy the scheduling config template:
+A a line to your crontab with *crontab -e* to run the script.
 
-  cp config/schedule.rb.example config/schedule.rb
-
-Edit it to your needs. Example:
+Or use whenever :
 
   every 12.hours do
     backup_profile 'my_profile'
   end
-
-= Usage
-
-To manually run a backup profile:
-
-  rake backup PROFILE=my_profile
-
-To update the crontab according to your schedule.rb :
-
-  rake update_crontab
-
-If you only want to show the crontab lines :
-
-  rake crontab 
-
-= Dependencies:
-
-Ruby gems:
-- rake
-- whenever
-- pony
-
-UNIX commands:
-- 'tar'
-- 'mysqldump' if you want to backup your MySQL databases
-- 'ncftpput' if you backup through FTP
-- 'scp' if you backup through SSH
 
 = Credits
 

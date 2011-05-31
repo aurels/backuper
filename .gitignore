@@ -1,4 +1,2 @@
 .DS_Store
 *.gem
-config/schedule.rb
-config/profiles/*.rb

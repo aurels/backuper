@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{backuper}
-  s.version = ""
+  s.version = File.read('VERSION')
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Aur\303\251lien Malisart"]
@@ -21,8 +21,6 @@ Gem::Specification.new do |s|
      "Rakefile",
      "VERSION",
      "backuper.gemspec",
-     "config/profiles/profile.rb.example",
-     "config/schedule.rb.example",
      "lib/backuper.rb"
   ]
   s.homepage = %q{http://github.com/aurels/backuper}
