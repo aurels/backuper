@@ -73,6 +73,35 @@ class Backuper
     end
   end
   
+  def perform_mongodb_backup
+    if mongodb_params == {}
+      puts "Skipping MongoDB backup as no configurtion given"
+      return
+    end
+    
+    timestamp = "#{Time.now.strftime('%Y-%m-%d-%s')}"
+    local_current_backup_path = "#{local_backup_base_path}/mongodb/#{timestamp}"
+    local_latest_backup_path = Dir["#{local_backup_base_path}/mongodb/*"].sort.last
+    
+    unless File.exist?("#{local_backup_base_path}/mongodb")
+      system "mkdir #{local_backup_base_path}/mongodb"
+    end
+    
+    # Local backup
+    
+    puts "Performing local backup of database '#{mysql_params['database']}' as user '#{mysql_params['username']}'"
+    system "mkdir #{local_current_backup_path}"
+    system "nice -n 10 mongodump #{mongodb_params['database']} --out #{local_current_backup_path}"
+    
+    # Cleanup of old versions
+    
+    Dir["#{local_backup_base_path}/mongodb/*"].sort.reverse.each_with_index do |backup_version, index|
+      if index >= max_kept_backups
+        system "rm -rf #{backup_version}"
+      end
+    end
+  end
+  
   def perform_remote_sync
     puts "Performing remote backup sync"
     system "nice -n 10 rsync -azH --delete #{local_backup_base_path} #{remote_backup_ssh_info}"
