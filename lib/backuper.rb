@@ -95,7 +95,7 @@ class Backuper
     
     puts "Performing local backup of mongo database '#{mongodb_params['database']}'"
     system "mkdir #{local_current_backup_path}"
-    system "nice -n 10 mongodump #{mongodb_params['database']} --out #{local_current_backup_path}"
+    system "nice -n 10 mongodump --db #{mongodb_params['database']} --out #{local_current_backup_path}"
     
     # Cleanup of old versions
     
