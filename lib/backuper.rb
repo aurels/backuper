@@ -1,7 +1,8 @@
 class Backuper
     
   attr_accessor :source_path, :local_backup_base_path, :remote_backup_ssh_info,
-                :remote_backup_base_path, :max_kept_backups, :mysql_params
+                :remote_backup_base_path, :max_kept_backups, :mysql_params,
+                :mongodb_params
   
   def initialize(&block)
     instance_eval(&block)
@@ -75,6 +76,7 @@ class Backuper
   end
   
   def perform_mongodb_backup
+    puts "hé hé hé hé debug"
     if mongodb_params == {}
       puts "Skipping MongoDB backup as no configurtion given"
       return
@@ -90,7 +92,7 @@ class Backuper
     
     # Local backup
     
-    puts "Performing local backup of database '#{mysql_params['database']}' as user '#{mysql_params['username']}'"
+    puts "Performing local backup of mongo database '#{mongodb_params['database']}'"
     system "mkdir #{local_current_backup_path}"
     system "nice -n 10 mongodump #{mongodb_params['database']} --out #{local_current_backup_path}"
     
