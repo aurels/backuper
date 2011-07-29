@@ -78,6 +78,7 @@ class Backuper
   end
   
   def perform_mongodb_backup
+    puts "mongo debug"
     if mongodb_params == {}
       puts "Skipping MongoDB backup as no configurtion given"
       return
