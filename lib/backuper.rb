@@ -1,3 +1,5 @@
+# coding: utf-8
+
 class Backuper
     
   attr_accessor :source_path, :local_backup_base_path, :remote_backup_ssh_info,
@@ -76,7 +78,6 @@ class Backuper
   end
   
   def perform_mongodb_backup
-    puts "hé hé hé hé debug"
     if mongodb_params == {}
       puts "Skipping MongoDB backup as no configurtion given"
       return
