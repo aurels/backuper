@@ -13,6 +13,7 @@ class Backuper
     
     perform_files_backup
     perform_database_backup
+    perform_mongodb_backup
     perform_remote_sync
   end
   
