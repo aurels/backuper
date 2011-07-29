@@ -9,15 +9,15 @@ class Backuper
   def initialize(&block)
     instance_eval(&block)
     
-    # mysql_params['host']     ||= 'localhost'
-    # mysql_params['username'] ||= 'root'
-    # 
-    # system "mkdir -p #{local_backup_base_path}"
-    # 
-    # perform_files_backup
-    # perform_database_backup
-    # perform_mongodb_backup
-    # perform_remote_sync
+    mysql_params['host']     ||= 'localhost'
+    mysql_params['username'] ||= 'root'
+    
+    system "mkdir -p #{local_backup_base_path}"
+    
+    perform_files_backup
+    perform_database_backup
+    perform_mongodb_backup
+    perform_remote_sync
   end
   
   def set(attribute, value)
@@ -78,7 +78,6 @@ class Backuper
   end
   
   def perform_mongodb_backup
-    puts "mongo debug"
     if mongodb_params == {}
       puts "Skipping MongoDB backup as no configurtion given"
       return
