@@ -78,7 +78,7 @@ class Backuper
   end
   
   def perform_mongodb_backup
-    if mongodb_params == {}
+    if mongodb_params.nil? || mongodb_params == {}
       puts "Skipping MongoDB backup as no configurtion given"
       return
     end
